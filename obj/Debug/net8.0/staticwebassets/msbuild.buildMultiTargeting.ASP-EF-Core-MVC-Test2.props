@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ASP-EF-Core-MVC-Test2.props" />
+</Project>
