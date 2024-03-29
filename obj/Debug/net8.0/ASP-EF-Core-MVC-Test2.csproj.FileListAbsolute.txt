@@ -62,3 +62,5 @@ C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\
 C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\obj\Debug\net8.0\ASP-EF-Core-MVC-Test2.genruntimeconfig.cache
 C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\obj\Debug\net8.0\ref\ASP-EF-Core-MVC-Test2.dll
 C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\obj\Debug\net8.0\ASP-EF-Core-MVC-Test2.sourcelink.json
+C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\bin\Debug\net8.0\Humanizer.dll
+C:\Users\eemel\Documents\Things\C# Projects\.NET Training\ASP-EF-Core-MVC-Test2\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll

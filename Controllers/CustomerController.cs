@@ -8,8 +8,6 @@ namespace ASP_EF_Core_MVC_Test2.Controllers;
 // Primary constructor syntax
 public class CustomerController(ApplicationDbContext dbContext) : Controller
 {
-    private readonly ApplicationDbContext? _dbContext = dbContext;
-    
     public IActionResult Index()
     {
         return View();
@@ -34,8 +32,8 @@ public class CustomerController(ApplicationDbContext dbContext) : Controller
 
         try
         {
-            _dbContext!.Customers.Add(newCustomer);
-            _dbContext.SaveChanges();
+            dbContext.Add(newCustomer);
+            dbContext.SaveChanges();
         }
         catch (Exception e)
         {

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewBag.Title = "Products";
+    Layout = "_Layout";
+}
+
+<script>
+    const fetchDeleteConfirmation = async id => {
+        fetch(`/Product/DeleteConfirmation/${id}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById(`delconf-${id}`).innerHTML = html;
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+
+<h2>Products</h2>
+
+<a asp-action="Create" class="btn btn-primary">Create Product</a>
+
+<div class="w-100 d-flex flex-wrap gap-3">
+    @foreach(var product in Model)
+    {
+        <div class="card" style="width: 18rem;">
+            <img src="@product.ImageUrl" class="card-img-top" alt="@product.ImageAltText">
+            <div class="card-body">
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
+                <p class="card-text">@(product.Price) Coins</p>
+                <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
+                <button class="btn btn-danger" onclick="fetchDeleteConfirmation(@product.Id)">Delete</button>
+            </div>
+            <div id="delconf-@product.Id" class="m-3"></div>
+        </div>
+    }
+</div>
