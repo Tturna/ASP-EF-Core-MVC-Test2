@@ -2017,11 +2017,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\.NET Training\\ASP-EF-Core-MVC-Test2\\ASP-EF-Core-MVC-Test2.csproj",
+      "projectUniqueName": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-EF-Core-Test2\\ASP-EF-Core-MVC-Test2.csproj",
       "projectName": "ASP-EF-Core-MVC-Test2",
-      "projectPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\.NET Training\\ASP-EF-Core-MVC-Test2\\ASP-EF-Core-MVC-Test2.csproj",
+      "projectPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-EF-Core-Test2\\ASP-EF-Core-MVC-Test2.csproj",
       "packagesPath": "C:\\Users\\eemel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\.NET Training\\ASP-EF-Core-MVC-Test2\\obj\\",
+      "outputPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-EF-Core-Test2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eemel\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2080,7 +2080,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

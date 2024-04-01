@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XP6om0GziP59gjpKx/Wi7+Ff10ZUVX00n9vNUcGUpjNp7oEHgf/nN5Nmi5EIfnGBXlp3GjSiellrn6aBrQb3gA==",
+  "dgSpecHash": "mxXKEUNGHfP+Hta9hrPU06YUSP67t0pc5MF4GAJ+j7RDDEKqYSCE260XfWPxGI1LneVVMhE0qwRTCM9Gl83H5g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\.NET Training\\ASP-EF-Core-MVC-Test2\\ASP-EF-Core-MVC-Test2.csproj",
+  "projectFilePath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-EF-Core-Test2\\ASP-EF-Core-MVC-Test2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eemel\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\eemel\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

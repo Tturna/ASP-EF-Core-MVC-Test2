@@ -7,6 +7,10 @@
 
 <h2>Create Order</h2>
 
-<form asp-action="Checkout">
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <select asp-for="CustomerId" asp-items="Model.CustomerOptions"></select>
+    <div class="mt-2 mb-2">
+        <input type="submit" value="Create Order" class="btn btn-primary"/>
+    </div>
 </form>

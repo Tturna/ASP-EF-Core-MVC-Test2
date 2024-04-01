@@ -34,6 +34,14 @@ public class OrderController(ApplicationDbContext dbContext) : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(NewOrderData orderData)
     {
+        var customer = dbContext.Customers!.FirstOrDefault(c => c.Id == orderData.CustomerId);
+        
+        if (customer == null)
+        {
+            ModelState.AddModelError(nameof(orderData.CustomerId), "Invalid customer");
+            return View("Create", orderData);
+        }
+        
         var cartString = HttpContext.Session.GetString("cart");
         var cart = new List<int>();
         
@@ -41,38 +49,19 @@ public class OrderController(ApplicationDbContext dbContext) : Controller
         {
             cart = JsonSerializer.Deserialize<List<int>>(cartString);
         }
+        
+        if (cart!.Count == 0)
+        {
+            ModelState.AddModelError("", "Cart is empty");
+            return View("Create", orderData);
+        }
 
         var products = dbContext.Products!
-            .AsNoTracking()
-            .Where(p => cart.Contains(p.Id))
+            .Where(p => cart!.Contains(p.Id))
             .ToArray();
 
         var orderItems = new List<OrderItem>();
-        var unitPrice = products.Aggregate(0, (total, next) => total + next.Price) / products.Length;
-
-        foreach (var product in products)
-        {
-            var existing = orderItems.FirstOrDefault(oi => oi.ProductId == product.Id);
-
-            if (existing != null) 
-            {
-                existing.Quantity++;
-                continue;
-            }
-            
-            orderItems.Add(new OrderItem
-            {
-                ProductId = product.Id,
-                Product = product,
-                UnitPrice = unitPrice,
-                Quantity = 1
-            });
-        }
-
-        var customer = dbContext.Customers!
-            .AsNoTracking()
-            .FirstOrDefault(c => c.Id == orderData.CustomerId);
-
+        
         var order = new Order()
         {
             OrderDate = DateTime.Now,
@@ -80,6 +69,37 @@ public class OrderController(ApplicationDbContext dbContext) : Controller
             OrderItems = orderItems,
             Customer = customer
         };
+        
+        var unitPrice = products.Aggregate(0, (total, next) => total + next.Price) / products.Length;
+        
+        foreach (var product in products)
+        {
+            var existing = orderItems.FirstOrDefault(oi => oi.ProductId == product.Id);
+        
+            if (existing != null) 
+            {
+                existing.Quantity++;
+                continue;
+            }
+
+            var orderItem = new OrderItem
+            {
+                OrderId = order.Id,
+                Order = order,
+                ProductId = product.Id,
+                Product = product,
+                UnitPrice = unitPrice,
+                Quantity = 1
+            };
+            
+            orderItems.Add(orderItem);
+            product.OrderItems.Add(orderItem);
+        }
+
+        dbContext.Orders!.Add(order);
+        dbContext.SaveChanges();
+        
+        return RedirectToAction("Checkout");
     }
     
     public IActionResult Checkout()
