@@ -6,8 +6,17 @@
 }
 
 <script>
-    const fetchAddToCart = async id => {
-        fetch(`/ShoppingCart/AddToCart/${id}`)
+    const fetchAddToCart = async (productId, productName) => {
+        fetch('/ShoppingCart/AddToCart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productId,
+                productName
+            })
+        })
         .then(response => response.text())
         .then(jsonData => {
             document.getElementById("notification").innerHTML = jsonData;
@@ -42,7 +51,7 @@
                 <p class="card-text">@(product.Price) Coins</p>
                 <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
                 <button class="btn btn-danger" onclick="fetchDeleteConfirmation(@product.Id)">Delete</button>
-                <button class="btn btn-success" onclick="fetchAddToCart(@product.Id)">Add to Cart</button>
+                <button class="btn btn-success" onclick="fetchAddToCart(@product.Id, '@(product.Name)')">Add to Cart</button>
             </div>
             <div id="delconf-@product.Id" class="m-3"></div>
         </div>

@@ -43,22 +43,29 @@ public class OrderController(ApplicationDbContext dbContext) : Controller
         }
         
         var cartString = HttpContext.Session.GetString("cart");
-        var cart = new List<int>();
+        var cart = string.IsNullOrEmpty(cartString)
+            ? new Dictionary<int, int>()
+            : JsonSerializer.Deserialize<Dictionary<int, int>>(cartString);
         
-        if (cartString != null)
-        {
-            cart = JsonSerializer.Deserialize<List<int>>(cartString);
-        }
+        var productIds = cart!.Keys.ToList();
         
-        if (cart!.Count == 0)
+        if (productIds.Count == 0)
         {
             ModelState.AddModelError("", "Cart is empty");
             return View("Create", orderData);
         }
 
-        var products = dbContext.Products!
-            .Where(p => cart!.Contains(p.Id))
+        var individualProducts = dbContext.Products!
+            .Where(p => productIds.Contains(p.Id))
             .ToArray();
+
+        var cartProducts = individualProducts.Select(ip => 
+            new CartProductData()
+            {
+                Product = ip,
+                Quantity = cart[ip.Id]
+            }
+        ).ToArray();
 
         var orderItems = new List<OrderItem>();
         
@@ -70,40 +77,27 @@ public class OrderController(ApplicationDbContext dbContext) : Controller
             Customer = customer
         };
         
-        var unitPrice = products.Aggregate(0, (total, next) => total + next.Price) / products.Length;
+        var unitPrice = cartProducts.Aggregate(0, (total, next) => total + next.Product.Price) / cartProducts.Length;
         
-        foreach (var product in products)
+        foreach (var cartProduct in cartProducts)
         {
-            var existing = orderItems.FirstOrDefault(oi => oi.ProductId == product.Id);
-        
-            if (existing != null) 
-            {
-                existing.Quantity++;
-                continue;
-            }
-
             var orderItem = new OrderItem
             {
                 OrderId = order.Id,
                 Order = order,
-                ProductId = product.Id,
-                Product = product,
+                ProductId = cartProduct.Product.Id,
+                Product = cartProduct.Product,
                 UnitPrice = unitPrice,
-                Quantity = 1
+                Quantity = cartProduct.Quantity
             };
             
             orderItems.Add(orderItem);
-            product.OrderItems.Add(orderItem);
+            cartProduct.Product.OrderItems.Add(orderItem);
         }
 
         dbContext.Orders!.Add(order);
         dbContext.SaveChanges();
-        
-        return RedirectToAction("Checkout");
-    }
-    
-    public IActionResult Checkout()
-    {
-        return View();
+
+        return View("Checkout", order);
     }
 }

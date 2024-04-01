@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using ASP_EF_Core_MVC_Test2.Data;
+using ASP_EF_Core_MVC_Test2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,39 +11,45 @@ public class ShoppingCartController(ApplicationDbContext dbContext) : Controller
     public IActionResult Index()
     {
         var cartString = HttpContext.Session.GetString("cart");
-        var cart = new List<int>();
+        var cart = string.IsNullOrEmpty(cartString)
+            ? new Dictionary<int, int>()
+            : JsonSerializer.Deserialize<Dictionary<int, int>>(cartString);
         
-        if (cartString != null)
-        {
-            cart = JsonSerializer.Deserialize<List<int>>(cartString);
-        }
-        
-        var products = dbContext.Products!.AsNoTracking().Where(p => cart!.Contains(p.Id)).ToArray();
+        var productIds = cart!.Keys.ToList();
+        var individualProducts = dbContext.Products!.Where(p => productIds.Contains(p.Id)).ToList();
+
+        var products = individualProducts.Select(ip =>
+            new CartProductData()
+            {
+                Product = ip,
+                Quantity = cart[ip.Id]
+            }
+        ).ToList();
         
         return View(products);
     }
 
-    public IActionResult AddToCart(int? id)
+    [HttpPost]
+    public IActionResult AddToCart([FromBody] NewCartProductData? cartProductData)
     {
-        if (id == null)
+        if (cartProductData == null || cartProductData.ProductId == default || string.IsNullOrEmpty(cartProductData.ProductName))
         {
-            return NotFound();
+            return BadRequest();
         }
         
         // Consider making a helper method for this
         var cartString = HttpContext.Session.GetString("cart");
-        var cart = new List<int>();
+        var cart = string.IsNullOrEmpty(cartString)
+            ? new Dictionary<int, int>()
+            : JsonSerializer.Deserialize<Dictionary<int, int>>(cartString);
+
+        cart!.TryGetValue(cartProductData.ProductId, out var value);
+        cart[cartProductData.ProductId] = ++value;
         
-        if (cartString != null)
-        {
-            cart = JsonSerializer.Deserialize<List<int>>(cartString);
-        }
-        
-        cart!.Add((int)id);
         cartString = JsonSerializer.Serialize(cart);
         HttpContext.Session.SetString("cart", cartString);
         
-        return Json("Added to cart");
+        return Json($"Added {cartProductData.ProductName} to cart");
     }
 
     public IActionResult RemoveFromCart(int? id)
@@ -54,14 +61,21 @@ public class ShoppingCartController(ApplicationDbContext dbContext) : Controller
         
         // Consider making a helper method for this
         var cartString = HttpContext.Session.GetString("cart");
-        var cart = new List<int>();
+        var cart = string.IsNullOrEmpty(cartString)
+            ? new Dictionary<int, int>()
+            : JsonSerializer.Deserialize<Dictionary<int, int>>(cartString);
 
-        if (cartString != null)
+        cart!.TryGetValue((int)id, out var value);
+        
+        if (value > 1)
         {
-            cart = JsonSerializer.Deserialize<List<int>>(cartString);
+            cart[(int)id] = --value;
+        }
+        else
+        {
+            cart.Remove((int)id);
         }
 
-        cart!.Remove((int)id);
         cartString = JsonSerializer.Serialize(cart);
         HttpContext.Session.SetString("cart", cartString);
 

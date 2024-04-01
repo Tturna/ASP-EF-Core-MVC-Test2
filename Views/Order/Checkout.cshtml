@@ -1,7 +1,35 @@
-﻿@{
+﻿@model Order
+
+@{
     ViewBag.Title = "Checkout";
     Layout = "_Layout";
 }
 
-<h2>Checkout</h2>
+<h2>Checkout for @Model.Customer.Name</h2>
 
+<h3>Items</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var orderItem in Model.OrderItems)
+    {
+        <tr>
+            <td>@orderItem.Product.Name</td>
+            <td>@orderItem.Quantity</td>
+            <td>@orderItem.Product.Price</td>
+            <td>@(orderItem.Quantity * orderItem.Product.Price)</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="3"><strong>Total</strong></td>
+        <td><strong>@(Model.OrderItems.Sum(oi => oi.Quantity * oi.Product.Price)) Coins</strong></td>
+    </tr>
+    </tbody>
+</table>
