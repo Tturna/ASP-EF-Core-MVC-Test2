@@ -1,0 +1,12 @@
+﻿@model NewOrderData
+
+@{
+    ViewBag.Title = "Create Order";
+    Layout = "_Layout";
+}
+
+<h2>Create Order</h2>
+
+<form asp-action="Checkout">
+    <select asp-for="CustomerId" asp-items="Model.CustomerOptions"></select>
+</form>

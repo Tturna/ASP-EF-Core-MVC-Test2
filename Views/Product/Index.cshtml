@@ -6,6 +6,15 @@
 }
 
 <script>
+    const fetchAddToCart = async id => {
+        fetch(`/ShoppingCart/AddToCart/${id}`)
+        .then(response => response.text())
+        .then(jsonData => {
+            document.getElementById("notification").innerHTML = jsonData;
+        })
+        .catch(error => console.error(error));
+    }
+
     const fetchDeleteConfirmation = async id => {
         fetch(`/Product/DeleteConfirmation/${id}`)
         .then(response => response.text())
@@ -17,6 +26,8 @@
 </script>
 
 <h2>Products</h2>
+
+<p>@ViewBag.Message</p>
 
 <a asp-action="Create" class="btn btn-primary">Create Product</a>
 
@@ -31,6 +42,7 @@
                 <p class="card-text">@(product.Price) Coins</p>
                 <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
                 <button class="btn btn-danger" onclick="fetchDeleteConfirmation(@product.Id)">Delete</button>
+                <button class="btn btn-success" onclick="fetchAddToCart(@product.Id)">Add to Cart</button>
             </div>
             <div id="delconf-@product.Id" class="m-3"></div>
         </div>
